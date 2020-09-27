@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 @Repository
 open interface UserProfileRepository : JpaRepository<UserProfile, Int> {
     @Query(nativeQuery = true, value = "SELECT * FROM account WHERE email =:email")
-    fun findOneByEmail(
-            @Param("emaial") email: String
+    open fun findOneByEmail(
+            @Param("email") email: String
     ): UserProfile?
 }

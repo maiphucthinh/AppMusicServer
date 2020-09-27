@@ -1,6 +1,7 @@
 package com.thin.music.server
 
-import com.thin.music.model.ItemChart
+import com.thin.music.model.ItemChartAlbum
+import com.thin.music.model.ItemMusicList
 import com.thin.music.model.ItemMusicOnline
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -52,7 +53,7 @@ class SongServiceImpl : SongSevice {
     }
 
     override fun getChart(): Any {
-        val chart: MutableList<ItemChart> = ArrayList()
+        val chart: MutableList<ItemChartAlbum> = ArrayList()
         try {
             val doc = Jsoup.connect("https://chiasenhac.vn/bang-xep-hang/tuan.html").get()
             val els = doc.select("div.tab-content").select("ul.list-unstyled")
@@ -63,12 +64,40 @@ class SongServiceImpl : SongSevice {
                 val nameSong = child.select("a").first().attr("title")
                 val linkImage = child.select("a").select("img").attr("src")
                 val nameSinger = child.select("div.author").text()
-                chart.add(ItemChart(linkSong, number, linkImage, nameSong, nameSinger, linkSong))
+                chart.add(ItemChartAlbum(linkSong, number, linkImage, nameSong, nameSinger, linkSong))
             }
         } catch (e: IOException) {
         }
-        return chart
+        val albums = getNewestAlbum()
+        val results = mutableListOf<ItemMusicList<ItemChartAlbum>>()
+        results.add(ItemMusicList("Top", chart))
+        results.add(ItemMusicList("Newest Album", albums))
+        return results
+    }
 
+    fun getNewestAlbum():MutableList<ItemChartAlbum>{
+        val newestAlbums: MutableList<ItemChartAlbum> = ArrayList()
+        try {
+            val doc: Document = Jsoup.connect("https://chiasenhac.vn/album-moi.html").get()
+            val albumsNew = doc.select("div.content-wrap").select("div.col")
+            for (child in albumsNew) {
+                val linkAlbumsSong = "https://chiasenhac.vn" + child.select("h3.card-title")
+                        .select("a").attr("href")
+                val imgAlbumsSong = child.select("div.card-header").attr("style").replace("background-image: url(", "").replace(");", "")
+                val nameAlbumsSong = child.select("h3.card-title").select("a").attr("title")
+                val nameAlbumsSingle = child.select("p.card-text").select("a").text()
+                val item = ItemChartAlbum()
+                item.id = linkAlbumsSong
+                item.songName = nameAlbumsSong
+                item.artistName = nameAlbumsSingle
+                item.linkImage = imgAlbumsSong
+                item.linkSong = linkAlbumsSong
+
+                newestAlbums.add(item)
+            }
+        } catch (e: IOException) {
+        }
+        return newestAlbums
     }
 
     private fun getListFirstSong(): Any {

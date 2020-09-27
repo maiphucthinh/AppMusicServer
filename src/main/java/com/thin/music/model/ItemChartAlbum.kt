@@ -1,6 +1,6 @@
 package com.thin.music.model
 
-class ItemChart {
+class ItemChartAlbum {
     var id: String? = null
     var number: String? = null
     var linkImage: String? = null
@@ -19,6 +19,7 @@ class ItemChart {
         this.linkSong = linkSong
         this.linkMusic = linkMusic
     }
+    constructor()
 
 
 }
