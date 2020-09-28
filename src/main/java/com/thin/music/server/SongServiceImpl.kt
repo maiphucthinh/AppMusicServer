@@ -51,15 +51,18 @@ class SongServiceImpl : SongSevice {
 
     override fun getLinkSong(linkSong: String?): Any? {
         try {
-            val doc = Jsoup.connect(linkSong).get()
-            val els = doc.select("div.tab-content").first().select("a.download_item")
-            if (els.size >= 2) {
-                return GetLinkMusic(els.get(1).attr("href"))
-            } else
-                return GetLinkMusic(els.get(0).attr("href"))
+            val c = Jsoup.connect(linkSong).get()
+            val els = c.select("div.tab-content").first().select("a.download_item")
+            return if (els.size >= 2) {
+                GetLinkMusic(els[1].attr("href"))
+            } else {
+                GetLinkMusic(els[0].attr("href"))
+            }
         } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
         }
-
         return null
     }
 
