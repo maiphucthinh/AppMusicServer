@@ -1,5 +1,6 @@
 package com.thin.music.server
 
+import com.thin.music.model.GetLinkMusic
 import com.thin.music.model.ItemChartAlbum
 import com.thin.music.model.ItemMusicList
 import com.thin.music.model.ItemMusicOnline
@@ -49,10 +50,20 @@ class SongServiceImpl : SongSevice {
     }
 
     override fun getLinkSong(linkSong: String?): Any? {
-        TODO("Not yet implemented")
+        try {
+            val doc = Jsoup.connect(linkSong).get()
+            val els = doc.select("div.tab-content").first().select("a.download_item")
+            if (els.size >= 2) {
+                return GetLinkMusic(els.get(1).attr("href"))
+            } else
+                return GetLinkMusic(els.get(0).attr("href"))
+        } catch (e: IOException) {
+        }
+
+        return null
     }
 
-    override fun getChart(): Any {
+    override fun getAlbum(): Any {
         val chart: MutableList<ItemChartAlbum> = ArrayList()
         try {
             val doc = Jsoup.connect("https://chiasenhac.vn/bang-xep-hang/tuan.html").get()
@@ -75,7 +86,11 @@ class SongServiceImpl : SongSevice {
         return results
     }
 
-    fun getNewestAlbum():MutableList<ItemChartAlbum>{
+    override fun getCharts(): Any? {
+        TODO("Not yet implemented")
+    }
+
+    fun getNewestAlbum(): MutableList<ItemChartAlbum> {
         val newestAlbums: MutableList<ItemChartAlbum> = ArrayList()
         try {
             val doc: Document = Jsoup.connect("https://chiasenhac.vn/album-moi.html").get()
@@ -116,5 +131,17 @@ class SongServiceImpl : SongSevice {
         } catch (e: IOException) {
         }
         return onlines
+    }
+
+    private fun getPlayBack() {
+        val online: MutableList<ItemMusicOnline> = ArrayList()
+        try {
+
+            val doc = Jsoup.connect("https://chiasenhac.vn/nhac-hot.html").get()
+            val els = doc.select("div.tab-content").select("ul.list-unstyled list_music bxh1")
+            val childEls = els.select("ul.media")
+
+        } catch (e: IOException) {
+        }
     }
 }
