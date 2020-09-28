@@ -64,7 +64,7 @@ class SongServiceImpl : SongSevice {
         } catch (e: NullPointerException) {
             e.printStackTrace()
         }
-        return "https://data2.chiasenhac.com/stream2/1693/2/1692290-1fed8fe3/32/Yeu%20-%20Khac%20Viet.m4a"
+        return null
     }
 
     override fun getAlbum(): Any {
