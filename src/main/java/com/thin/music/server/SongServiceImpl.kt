@@ -51,13 +51,8 @@ class SongServiceImpl : SongSevice {
     }
 
     override fun getLinkSong(linkSong: String?): Any? {
-        var link = ""
-        if (linkSong == null) {
-            link = ""
-        } else
-            link = linkSong
         try {
-            val c = Jsoup.connect(link).get()
+            val c = Jsoup.connect(linkSong).get()
             val els = c.select("div.tab-content").first().select("a.download_item")
             return if (els.size >= 2) {
                 GetLinkMusic(els[1].attr("href"))
@@ -69,7 +64,7 @@ class SongServiceImpl : SongSevice {
         } catch (e: NullPointerException) {
             e.printStackTrace()
         }
-        return null
+        return "https://data2.chiasenhac.com/stream2/1693/2/1692290-1fed8fe3/32/Yeu%20-%20Khac%20Viet.m4a"
     }
 
     override fun getAlbum(): Any {
