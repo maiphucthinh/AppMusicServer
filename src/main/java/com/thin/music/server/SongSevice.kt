@@ -5,4 +5,7 @@ interface SongSevice {
     fun getLinkSong(linkSong: String?): Any?
     fun getAlbum(): Any?
     fun getCharts(): Any?
+
+
+
 }
