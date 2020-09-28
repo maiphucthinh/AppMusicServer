@@ -40,6 +40,7 @@ class SongServiceImpl : SongSevice {
                     }
                 }
             }
+
         } catch (e: IOException) {
             e.printStackTrace()
         } catch (e: NullPointerException) {
@@ -50,8 +51,13 @@ class SongServiceImpl : SongSevice {
     }
 
     override fun getLinkSong(linkSong: String?): Any? {
+        var link = ""
+        if (linkSong == null) {
+            link = ""
+        } else
+            link = linkSong
         try {
-            val c = Jsoup.connect(linkSong).get()
+            val c = Jsoup.connect(link).get()
             val els = c.select("div.tab-content").first().select("a.download_item")
             return if (els.size >= 2) {
                 GetLinkMusic(els[1].attr("href"))
@@ -112,9 +118,13 @@ class SongServiceImpl : SongSevice {
                 item.linkSong = linkAlbumsSong
 
                 newestAlbums.add(item)
+
             }
+
+
         } catch (e: IOException) {
         }
+
         return newestAlbums
     }
 
