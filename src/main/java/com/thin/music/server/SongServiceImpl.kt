@@ -83,15 +83,35 @@ class SongServiceImpl : SongSevice {
             }
         } catch (e: IOException) {
         }
+        val songTheme = getSongTheme()
         val albums = getNewestAlbum()
         val results = mutableListOf<ItemMusicList<ItemChartAlbum>>()
         results.add(ItemMusicList("Top", chart))
         results.add(ItemMusicList("Newest Album", albums))
+        results.add(ItemMusicList("Theme", songTheme))
         return results
     }
 
     override fun getCharts(): Any? {
         TODO("Not yet implemented")
+    }
+
+    fun getSongTheme(): MutableList<ItemChartAlbum> {
+        val songTheme: MutableList<ItemChartAlbum> = ArrayList()
+        try {
+            val c =
+                    Jsoup.connect("https://chiasenhac.vn").get()
+            val els = c.select("div.box_catalog").select("a")
+            for (child in els) {
+                val linkTheme = child.select("a").attr("href")
+                val linkImage = child.select("a").attr("style")
+                        .replace("background: url('", "").replace("') no-repeat;", "")
+                songTheme.add(ItemChartAlbum(null, null, linkImage, null, null, linkTheme))
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return songTheme
     }
 
     fun getNewestAlbum(): MutableList<ItemChartAlbum> {
@@ -102,7 +122,8 @@ class SongServiceImpl : SongSevice {
             for (child in albumsNew) {
                 val linkAlbumsSong = "https://chiasenhac.vn" + child.select("h3.card-title")
                         .select("a").attr("href")
-                val imgAlbumsSong = child.select("div.card-header").attr("style").replace("background-image: url(", "").replace(");", "")
+                val imgAlbumsSong = child.select("div.card-header").attr("style")
+                        .replace("background-image: url(", "").replace(");", "")
                 val nameAlbumsSong = child.select("h3.card-title").select("a").attr("title")
                 val nameAlbumsSingle = child.select("p.card-text").select("a").text()
                 val item = ItemChartAlbum()
