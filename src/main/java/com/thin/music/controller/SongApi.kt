@@ -32,4 +32,12 @@ class SongApi {
         return service.getLinkSong(linkSong)
     }
 
+    @GetMapping("/api/getTheme")
+    fun getLinkTheme(
+            @RequestParam("linkTheme", required = false)
+            linkTheme: String
+    ): Any? {
+        return service.getChildTheme(linkTheme)
+    }
+
 }

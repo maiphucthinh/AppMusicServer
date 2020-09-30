@@ -7,7 +7,10 @@ class ItemChartAlbum {
     var songName: String? = null
     var artistName: String? = null
     var linkSong: String? = null
+    var linkSinger: String? = null
     var linkMusic: String? = null
+
+    constructor()
 
     constructor(id: String?, number: String?, linkImage: String?,
                 songName: String?, artistName: String?, linkSong: String?) {
@@ -19,7 +22,13 @@ class ItemChartAlbum {
         this.linkSong = linkSong
         this.linkMusic = linkMusic
     }
-    constructor()
+
+    constructor(songName: String?, artistName: String?, linkSong: String?, linkSinger: String?) {
+        this.songName = songName
+        this.artistName = artistName
+        this.linkSong = linkSong
+        this.linkSinger = linkSinger
+    }
 
 
 }

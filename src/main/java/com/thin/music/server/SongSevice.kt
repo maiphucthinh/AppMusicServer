@@ -5,6 +5,7 @@ interface SongSevice {
     fun getLinkSong(linkSong: String?): Any?
     fun getAlbum(): Any?
     fun getCharts(): Any?
+    fun getChildTheme(linkTheme:String): Any?
 
 
 

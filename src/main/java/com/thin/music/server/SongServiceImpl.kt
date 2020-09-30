@@ -96,6 +96,27 @@ class SongServiceImpl : SongSevice {
         TODO("Not yet implemented")
     }
 
+    override fun getChildTheme(linkTheme: String): Any? {
+        val themes: MutableList<ItemChartAlbum> = ArrayList()
+        try {
+
+            val c =
+                    Jsoup.connect("https://chiasenhac.vn" + linkTheme).get()
+            val els = c.select("div.d-table").select("div.card-footer")
+            val childEls = els.select("div.card-footer")
+            for (child in childEls) {
+                val linkSong = child.select("div.name").select("a").attr("href")
+                val nameSong = child.select("div.name").select("a").text()
+                val linkSinger = child.select("div.author").select("a").attr("href")
+                val artist = child.select("div.author").select("a").text()
+                themes.add(ItemChartAlbum(nameSong, artist, linkSong, linkSinger))
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return themes
+    }
+
     fun getSongTheme(): MutableList<ItemChartAlbum> {
         val songTheme: MutableList<ItemChartAlbum> = ArrayList()
         try {
