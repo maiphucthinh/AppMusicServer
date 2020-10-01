@@ -27,7 +27,7 @@ class SongApi {
 
     @GetMapping("/api/getLink")
     fun getLinkSong(
-            @RequestParam("linkSong") linkSong: String?
+            @RequestParam("linkSong",required = false) linkSong: String?
     ): Any? {
         return service.getLinkSong(linkSong)
     }

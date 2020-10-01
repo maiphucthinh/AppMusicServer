@@ -20,7 +20,7 @@ class VideoApi {
 
     @GetMapping("/api/getLinkVideo")
     fun getLinkVideo(
-            @RequestParam("linkVideo") linkVideo: String): Any {
+            @RequestParam("linkVideo", required = false) linkVideo: String): Any {
         return server.getLinkVideo(linkVideo)
     }
 
