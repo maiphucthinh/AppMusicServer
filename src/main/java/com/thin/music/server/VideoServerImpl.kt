@@ -1,5 +1,6 @@
 package com.thin.music.server
 
+import com.thin.music.model.GetLinkMusic
 import com.thin.music.model.ItemMusicOnline
 import com.thin.music.model.ItemVideoOnline
 import org.jsoup.Jsoup
@@ -27,5 +28,24 @@ class VideoServerImpl : VideoServer {
             e.printStackTrace()
         }
         return onlines
+    }
+
+    override fun getLinkVideo(linkVideo: String): Any {
+        val c =
+                Jsoup.connect(linkVideo)
+                        .get()
+        val els = c.select("div.col-12").select("li")
+        val childEls = els.select("li")
+       return if (childEls.size >= 2) {
+           GetLinkMusic(
+                   childEls.get(1).select("a").attr("href")
+           )
+//            val linkVideo = childEls.get(1).select("a").attr("href")
+        } else {
+           GetLinkMusic(
+                   childEls.get(0).select("a").attr("href")
+           )
+//            val linkVideo1 = childEls.get(0).select("a").attr("href")
+        }
     }
 }

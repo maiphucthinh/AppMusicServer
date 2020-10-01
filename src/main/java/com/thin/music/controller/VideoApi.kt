@@ -3,6 +3,7 @@ package com.thin.music.controller
 import com.thin.music.server.VideoServer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -15,6 +16,12 @@ class VideoApi {
     @GetMapping("/api/getVideo")
     fun getVideo(): Any? {
         return server.getVideo()
+    }
+
+    @GetMapping("/api/getLinkVideo")
+    fun getLinkVideo(
+            @RequestParam("linkVideo") linkVideo: String): Any {
+        return server.getLinkVideo(linkVideo)
     }
 
 }
