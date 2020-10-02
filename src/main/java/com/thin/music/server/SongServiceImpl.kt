@@ -102,6 +102,8 @@ class SongServiceImpl : SongSevice {
         val childEls = els.select("div.card")
         for (child in childEls) {
             val linkImage = child.select("div.card-header").attr("style")
+                    .replace("background-image: url(", "")
+                    .replace(");", "")
             val linkAlbum = child.select("a").attr("href")
             val nameAlbum = child.select("a").attr("title")
             val nameArtist = child.select("p.card-text").text()
