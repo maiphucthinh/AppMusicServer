@@ -11,7 +11,7 @@ import java.io.IOException
 
 @Service
 class SongServiceImpl : SongSevice {
-    override fun searchSong(name: String?): Any {
+    override fun searchSongOnline(name: String?): Any {
         if (name == null) {
             return getListFirstSong()
         }
@@ -45,6 +45,38 @@ class SongServiceImpl : SongSevice {
         }
 
         return onlines
+    }
+
+    private fun getSongSearch(nameSong: String?): MutableList<ItemSearchOnline> {
+        val listSong: MutableList<ItemSearchOnline> = ArrayList()
+        try {
+            val c: Document = Jsoup.connect(("https://chiasenhac.vn/tim-kiem?q="
+                    + nameSong!!.replace(" ", "+")) +
+                    "&page_music=" + "1" + "&filter=all").get()
+            val els: Elements = c.select("div.tab-content").first().select("ul.list-unstyled")
+            for (i in 0..els.size - 1) {
+                val e: Element = els.get(i)
+                val childEls: Elements = e.select("li.media")
+                for (child in childEls) {
+                    try {
+                        val linkSong: String = child.select("a").first().attr("href")
+                        val linkImg: String = child.select("a").first().select("img").attr("src")
+                        val title: String = child.select("a").first().attr("title")
+                        val singer: String = child.select("div.author").text()
+                        listSong.add(ItemSearchOnline(null, linkImg, linkSong, title, singer))
+                    } catch (e1: Exception) {
+                        e1.printStackTrace()
+                    }
+                }
+            }
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+        }
+
+        return listSong
     }
 
     override fun getLinkSong(linkSong: String?): Any? {
@@ -91,12 +123,29 @@ class SongServiceImpl : SongSevice {
 
     override fun searchAlbums(nameAlbum: String?): Any? {
         val listAlbums: MutableList<ItemSearchOnline> = ArrayList()
-        if (nameAlbum != null) {
-
+        val c = Jsoup.connect("https://chiasenhac.vn/tim-kiem?q="
+                + nameAlbum!!.replace(" ", "+") +
+                "&page_album=1&filter=").get()
+        val els = c.select("div.tab-content").select("div.col")
+        val childEls = els.select("div.card")
+        for (child in childEls) {
+            val linkImage = child.select("div.card-header").attr("style")
+                    .replace("background-image: url(", "")
+                    .replace(");", "")
+            val linkAlbum = child.select("a").attr("href")
+            val nameAlbum = child.select("a").attr("title")
+            val nameArtist = child.select("p.card-text").text()
+            listAlbums.add(ItemSearchOnline(null, linkImage, linkAlbum, nameAlbum, nameArtist))
         }
+        return listAlbums
+    }
+
+    private fun getPlaylistSearch(songName: String?): MutableList<ItemSearchOnline> {
+        val listAlbums: MutableList<ItemSearchOnline> = ArrayList()
+
         val c =
                 Jsoup.connect("https://chiasenhac.vn/tim-kiem?q="
-                        + nameAlbum!!.replace(" ", "+") +
+                        + songName!!.replace(" ", "+") +
                         "&page_album=1&filter=").get()
         val els = c.select("div.tab-content").select("div.col")
         val childEls = els.select("div.card")
@@ -110,6 +159,26 @@ class SongServiceImpl : SongSevice {
             listAlbums.add(ItemSearchOnline(null, linkImage, linkAlbum, nameAlbum, nameArtist))
         }
         return listAlbums
+    }
+
+    private fun getvideoSearch(link: String?): MutableList<ItemSearchOnline> {
+        val listVideo: MutableList<ItemSearchOnline> = ArrayList()
+        val c =
+                Jsoup.connect("https://chiasenhac.vn/tim-kiem?q="
+                        + link!!.replace(" ", "+") +
+                        "&page_video=1&filter=").get()
+        val els = c.select("div.tab-content").select("div.col")
+        val childEls = els.select("div.card")
+        for (child in childEls) {
+            val linkImage = child.select("div.card-header").attr("style")
+                    .replace("background-image: url(", "")
+                    .replace(");", "")
+            val linkAlbum = child.select("a").attr("href")
+            val nameAlbum = child.select("a").attr("title")
+            val nameArtist = child.select("p.card-text").text()
+            listVideo.add(ItemSearchOnline(null, linkImage, linkAlbum, nameAlbum, nameArtist))
+        }
+        return listVideo
     }
 
     override fun getChildTheme(linkTheme: String): Any? {
@@ -131,6 +200,17 @@ class SongServiceImpl : SongSevice {
             e.printStackTrace()
         }
         return themes
+    }
+
+    override fun getAllSearch(songName: String?): Any? {
+        val listAllSearchOnline = mutableListOf<ItemMusicList<ItemSearchOnline>>()
+        val song = getSongSearch(songName)
+        val playlist = getPlaylistSearch(songName)
+        val videos = getvideoSearch(songName)
+        listAllSearchOnline.add(ItemMusicList("Bài hát", song))
+        listAllSearchOnline.add(ItemMusicList("Playlist", playlist))
+        listAllSearchOnline.add(ItemMusicList("MV", videos))
+        return listAllSearchOnline
     }
 
     fun getSongTheme(): MutableList<ItemChartAlbum> {
@@ -199,15 +279,4 @@ class SongServiceImpl : SongSevice {
         return onlines
     }
 
-    private fun getPlayBack() {
-        val online: MutableList<ItemMusicOnline> = ArrayList()
-        try {
-
-            val doc = Jsoup.connect("https://chiasenhac.vn/nhac-hot.html").get()
-            val els = doc.select("div.tab-content").select("ul.list-unstyled list_music bxh1")
-            val childEls = els.select("ul.media")
-
-        } catch (e: IOException) {
-        }
-    }
 }

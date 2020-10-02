@@ -2,7 +2,6 @@ package com.thin.music.controller
 
 import com.thin.music.server.SongSevice
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.Query
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -17,7 +16,7 @@ class SongApi {
             @RequestParam("songName", required = false)
             songName: String?
     ): Any? {
-        return service.searchSong(songName)
+        return service.searchSongOnline(songName)
     }
 
     @GetMapping("/api/getChart")
@@ -46,6 +45,14 @@ class SongApi {
             albumName: String?
     ): Any? {
         return service.searchAlbums(albumName)
+    }
+
+    @GetMapping("/api/searchAll")
+    fun allSearch(
+            @RequestParam("nameSong", required = false)
+            nameSong: String?
+    ): Any? {
+        return service.getAllSearch(nameSong)
     }
 
 }
