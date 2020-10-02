@@ -27,7 +27,7 @@ class SongApi {
 
     @GetMapping("/api/getLink")
     fun getLinkSong(
-            @RequestParam("linkSong",required = false) linkSong: String?
+            @RequestParam("linkSong", required = false) linkSong: String?
     ): Any? {
         return service.getLinkSong(linkSong)
     }
@@ -38,6 +38,14 @@ class SongApi {
             linkTheme: String
     ): Any? {
         return service.getChildTheme(linkTheme)
+    }
+
+    @GetMapping("/api/searchAlbum")
+    fun searAlbums(
+            @RequestParam("albumName", required = false)
+            albumName: String?
+    ): Any? {
+        return service.searchAlbums(albumName)
     }
 
 }

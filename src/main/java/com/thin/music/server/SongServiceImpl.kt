@@ -1,9 +1,6 @@
 package com.thin.music.server
 
-import com.thin.music.model.GetLinkMusic
-import com.thin.music.model.ItemChartAlbum
-import com.thin.music.model.ItemMusicList
-import com.thin.music.model.ItemMusicOnline
+import com.thin.music.model.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -92,8 +89,25 @@ class SongServiceImpl : SongSevice {
         return results
     }
 
-    override fun getCharts(): Any? {
-        TODO("Not yet implemented")
+    override fun searchAlbums(nameAlbum: String?): Any? {
+        val listAlbums: MutableList<ItemSearchOnline> = ArrayList()
+        if (nameAlbum != null) {
+
+        }
+        val c =
+                Jsoup.connect("https://chiasenhac.vn/tim-kiem?q="
+                        + nameAlbum!!.replace(" ", "+") +
+                        "&page_album=1&filter=").get()
+        val els = c.select("div.tab-content").select("div.col")
+        val childEls = els.select("div.card")
+        for (child in childEls) {
+            val linkImage = child.select("div.card-header").attr("style")
+            val linkAlbum = child.select("a").attr("href")
+            val nameAlbum = child.select("a").attr("title")
+            val nameArtist = child.select("p.card-text").text()
+            listAlbums.add(ItemSearchOnline(null, linkImage, linkAlbum, nameAlbum, nameArtist))
+        }
+        return listAlbums
     }
 
     override fun getChildTheme(linkTheme: String): Any? {
