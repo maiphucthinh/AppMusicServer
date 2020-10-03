@@ -39,4 +39,12 @@ class SongApi {
         return service.getAllSearch(nameSong)
     }
 
+    @GetMapping("/api/getAllArtistSong")
+    fun getAllArtistSong(
+            @RequestParam("linkArtist", required = false)
+            linkArtist: String?
+    ): Any? {
+        return service.getAllArtistSong(linkArtist)
+    }
+
 }

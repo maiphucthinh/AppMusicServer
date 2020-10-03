@@ -73,7 +73,7 @@ class SongServiceImpl : SongSevice {
                 val nameSong = child.select("a").first().attr("title")
                 val linkImage = child.select("a").select("img").attr("src")
                 val nameSinger = child.select("div.author").text()
-                chart.add(ItemChartAlbum(linkSong, number, linkImage, nameSong, nameSinger, linkSong))
+                chart.add(ItemChartAlbum(linkSong, number, linkImage, nameSong, nameSinger, null, linkSong))
             }
         } catch (e: IOException) {
         }
@@ -140,7 +140,7 @@ class SongServiceImpl : SongSevice {
             val linkArtist = childEls.select("a").attr("href")
             val nameArtist = childEls.select("a").text()
             var linkImg = childEls.select("img").attr("src")
-            if (linkImg.equals("https://data.chiasenhac.com/imgs/no_cover.jpg")){
+            if (linkImg.equals("https://data.chiasenhac.com/imgs/no_cover.jpg")) {
                 linkImg = null
             }
             listArtist.add(ItemSearchOnline(null, linkArtist, nameArtist, linkImg))
@@ -182,6 +182,30 @@ class SongServiceImpl : SongSevice {
         return listAllSearchOnline
     }
 
+    override fun getAllArtistSong(linkArtist: String?): Any? {
+        val lisArtistSong = mutableListOf<ItemMusicList<ItemChartAlbum>>()
+        val songs = getArtistSong(linkArtist)
+        lisArtistSong.add(ItemMusicList("Bài hát", songs))
+        return lisArtistSong
+    }
+
+    private fun getArtistSong(linkArtist: String?): MutableList<ItemChartAlbum> {
+        val songs = mutableListOf<ItemChartAlbum>()
+        val c =
+                Jsoup.connect("https://chiasenhac.vn" + linkArtist + "?tab=music")
+                        .get()
+        val els = c.select("div.tabs").select("li.media")
+        for (childEls in els) {
+            val number = childEls.select("span.counter").text()
+            val linkImage = childEls.select("a").attr("href")
+            val songName = childEls.select("a").attr("title")
+            val nameArtist = childEls.select("div.author").select("a").text()
+            val typeMusic = childEls.select("span.card-text").text()
+            songs.add(ItemChartAlbum(null, number, linkImage, songName, nameArtist, typeMusic, null))
+        }
+        return songs
+    }
+
     fun getSongTheme(): MutableList<ItemChartAlbum> {
         val songTheme: MutableList<ItemChartAlbum> = ArrayList()
         try {
@@ -192,7 +216,7 @@ class SongServiceImpl : SongSevice {
                 val linkTheme = child.select("a").attr("href")
                 val linkImage = child.select("a").attr("style")
                         .replace("background: url('", "").replace("') no-repeat;", "")
-                songTheme.add(ItemChartAlbum(null, null, linkImage, null, null, linkTheme))
+                songTheme.add(ItemChartAlbum(null, null, linkImage, null, null, null, linkTheme))
             }
         } catch (e: IOException) {
             e.printStackTrace()
