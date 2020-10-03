@@ -139,7 +139,11 @@ class SongServiceImpl : SongSevice {
         for (childEls in els) {
             val linkArtist = childEls.select("a").attr("href")
             val nameArtist = childEls.select("a").text()
-            listArtist.add(ItemSearchOnline(null, linkArtist, nameArtist))
+            var linkImg = childEls.select("img").attr("src")
+            if (linkImg.equals("https://data.chiasenhac.com/imgs/no_cover.jpg")){
+                linkImg = null
+            }
+            listArtist.add(ItemSearchOnline(null, linkArtist, nameArtist, linkImg))
         }
         return listArtist
     }

@@ -16,10 +16,11 @@ class ItemSearchOnline {
         this.artistName = artistName
     }
 
-    constructor(id: String?, linkArtist: String?, artistName: String?) {
+    constructor(id: String?, linkArtist: String?, artistName: String?,linkImage: String?) {
         this.id = id
         this.linkArtist = linkArtist
         this.artistName = artistName
+        this.linkImage = linkImage
     }
 
 
