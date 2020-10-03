@@ -11,14 +11,6 @@ class SongApi {
     @Autowired
     private lateinit var service: SongSevice
 
-//    @GetMapping("/api/searchSong")
-//    fun searchSong(
-//            @RequestParam("songName", required = false)
-//            songName: String?
-//    ): Any? {
-//        return service.searchSongOnline(songName)
-//    }
-
     @GetMapping("/api/getChart")
     fun getChart(): Any? {
         return service.getAlbum()
@@ -38,14 +30,6 @@ class SongApi {
     ): Any? {
         return service.getChildTheme(linkTheme)
     }
-
-//    @GetMapping("/api/searchAlbum")
-//    fun searAlbums(
-//            @RequestParam("albumName", required = false)
-//            albumName: String?
-//    ): Any? {
-//        return service.searchAlbums(albumName)
-//    }
 
     @GetMapping("/api/searchAll")
     fun allSearch(

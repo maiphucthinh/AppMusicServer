@@ -4,6 +4,7 @@ class ItemSearchOnline {
     var id: String? = null
     var linkImage: String? = null
     var linkMusic: String? = null
+    var linkArtist: String? = null
     var title: String? = null
     var artistName: String? = null
 
@@ -12,6 +13,12 @@ class ItemSearchOnline {
         this.linkImage = linkImage
         this.linkMusic = linkMusic
         this.title = title
+        this.artistName = artistName
+    }
+
+    constructor(id: String?, linkArtist: String?, artistName: String?) {
+        this.id = id
+        this.linkArtist = linkArtist
         this.artistName = artistName
     }
 
