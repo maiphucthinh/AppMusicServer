@@ -14,6 +14,9 @@ class SongServiceImpl : SongSevice {
 
     private fun getSongSearch(nameSong: String?): MutableList<ItemSearchOnline> {
         val listSong: MutableList<ItemSearchOnline> = ArrayList()
+        if (nameSong == null) {
+            return listSong
+        }
         try {
             val c: Document = Jsoup.connect(("https://chiasenhac.vn/tim-kiem?q="
                     + nameSong!!.replace(" ", "+")) +
@@ -110,20 +113,21 @@ class SongServiceImpl : SongSevice {
 
     private fun getvideoSearch(link: String?): MutableList<ItemSearchOnline> {
         val listVideo: MutableList<ItemSearchOnline> = ArrayList()
+        if (link == null) {
+            return listVideo
+        }
         val c =
                 Jsoup.connect("https://chiasenhac.vn/tim-kiem?q="
-                        + link!!.replace(" ", "+") +
-                        "&page_video=1&filter=").get()
-        val els = c.select("div.tab-content").select("div.col")
-        val childEls = els.select("div.card")
-        for (child in childEls) {
+                        + link!!.replace(" ", "+") + "&page_video=1&filter=")
+                        .get()
+        val els = c.select("div.tab-content").select("div.card.card1.video")
+        for (child in els) {
             val linkImage = child.select("div.card-header").attr("style")
-                    .replace("background-image: url(", "")
-                    .replace(");", "")
-            val linkAlbum = child.select("a").attr("href")
-            val nameAlbum = child.select("a").attr("title")
-            val nameArtist = child.select("p.card-text").text()
-            listVideo.add(ItemSearchOnline(null, linkImage, linkAlbum, nameAlbum, nameArtist))
+                    .replace("background-image: url(", "").replace(");", "")
+            val linkMusic = child.select("a").attr("href")
+            val title = child.select("a").attr("title")
+            val artistName = child.select("p").text()
+            listVideo.add(ItemSearchOnline(null, linkImage, linkMusic, title, artistName))
         }
         return listVideo
     }

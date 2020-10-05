@@ -43,9 +43,9 @@ class VideoServerImpl : VideoServer {
         val els = c.select("div.col-12").select("li")
         val childEls = els.select("li")
         return if (childEls.size >= 2) {
-            GetLinkMusic(childEls.get(1).select("a").attr("href"))
+            GetLinkMusic(childEls.get(1).select("a").attr("href")+"thin")
         } else {
-            GetLinkMusic(childEls.get(0).select("a").attr("href"))
+            GetLinkMusic(childEls.get(0).select("a").attr("href")+"thin")
         }
     }
 }
