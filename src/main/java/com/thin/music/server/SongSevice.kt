@@ -6,6 +6,6 @@ interface SongSevice {
     fun getChildTheme(linkTheme: String): Any?
     fun getAllSearch(songName: String?): Any?
     fun getAllArtistSong(linkArtist: String?): Any?
-
+    fun getLinkTheme(linkTheme:String?):Any?
 
 }

@@ -46,5 +46,11 @@ class SongApi {
     ): Any? {
         return service.getAllArtistSong(linkArtist)
     }
-
+    @GetMapping("/api/getListTheme")
+    fun getListTheme(
+            @RequestParam("linktheme", required = false)
+            linktheme: String?
+    ): Any? {
+        return service.getLinkTheme(linktheme)
+    }
 }
