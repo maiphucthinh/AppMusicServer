@@ -1,6 +1,6 @@
 package com.thin.music.controller
 
-import com.thin.music.server.UserServer
+import com.thin.music.server.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RestController
 
@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RestController
 class UserController {
 
     @Autowired
-    private lateinit var server: UserServer
+    private lateinit var service: UserService
 }

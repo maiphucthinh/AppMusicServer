@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class UserServerImpl : UserServer {
+class UserServerImpl : UserService {
     @Autowired
     private lateinit var userProfileRepository: UserProfileRepository
     override fun register(data: RegisterRequest): Any {
